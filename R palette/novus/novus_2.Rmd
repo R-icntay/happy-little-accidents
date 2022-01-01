@@ -1,0 +1,77 @@
+---
+title: "Genuary Day 1"
+output:
+  html_document:
+    css: style_7.css
+    df_print: paged
+    theme: flatly
+    highlight: breezedark
+    toc_float: yes
+    code_download: yes
+    word_document: null
+    toc: yes
+---
+
+Genuary Day 1:
+
+Tried to modify [Georgios Karamanis code](https://github.com/gkaramanis/aRtist/blob/main/genuary/2022/2022-01/2022-01.R), see what comes of it and learn in the process. Thank you Georgios 🙇.
+
+```{r}
+suppressWarnings(if (!require(pacman)) install.packages("pacman"))
+
+pacman::p_load('tidyverse', 'ggforce', 'ambient', 'here', 'paletteer')
+
+# Not on cran
+library(MetBrewer)
+
+```
+
+-   `ggforce` aims to be a collection of mainly new stats and geoms for composing specialised ggplot plots.
+
+-   `ambient` is a an R package that provides access to the [FastNoise](https://github.com/Auburns/FastNoise) C++ library for generating noise.
+
+-   `MetBrewer` is a collection of Palettes inspired by works at the Metropolitan Museum of Art in New York.
+
+```{r}
+set.seed(2056)
+
+# Create a long format grid
+grid <- long_grid(seq(1, 10, length.out = 100), seq(1, 10, length.out = 100))
+# Generate perlin noise
+grid$noise <- gen_perlin(grid$x, grid$y, frequency = 0.5)
+
+grid %>% 
+  slice_at()
+```
+
+Just a data frame with x, y and some noise. Good to know.
+
+`ambient::long_grid()` : Create a long format grid. Somewhat similar to `tidyr::crossing`?
+
+Time to plot it.
+
+[`ggforce::geom_regon`](https://ggforce.data-imaginist.com/reference/geom_regon.html) : makes it easy to construct regular polygons (polygons where all sides and angles are equal) by specifying the number of sides, position, and size.
+
+```{r}
+grid <- long_grid(seq(1, 12, length.out = 100), seq(1, 10, length.out = 100))
+# Generate perlin noise
+grid$noise <- gen_perlin(grid$x, grid$y, frequency = 2)
+
+grid %>% 
+  ggplot() +
+  geom_regon(aes(x0 = x, y0 = y, sides = 8, angle = noise * pi, r = 2.5, fill = noise), size = 0.1, color = NA, alpha = 0.1) +
+  # Use your own colour scale with gradientn
+  scale_fill_gradientn(colors = rev(met.brewer("Hiroshige"))) +
+  coord_cartesian(clip = "off") +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+```
+
+```{r}
+# ggsave("novus_1.png", device = "png", width = 12, height = 12, units = "in", dpi = 500)
+
+ggsave("novus_3_1.png", device = "png",  width = 20, height = 11.25, dpi = 700)
+```

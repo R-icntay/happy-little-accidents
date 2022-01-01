@@ -1,0 +1,43 @@
+---
+title: "Genuary Day 1: Novus"
+output:
+  html_document:
+    df_print: paged
+    theme: flatly
+    highlight: breezedark
+    toc_float: yes
+    code_download: yes
+    word_document: null
+    toc: yes
+---
+
+Genuary Day 1:
+
+Tried to modify Georgios Karamanis code, see what comes of it and learn in the process. Thank you Georgios 🙇.
+
+```{r}
+# Create a grid of points
+grid <- long_grid(seq(1, 12, length.out = 100), seq(1, 10, length.out = 100))
+
+# Add cubic noise
+grid$noise <- gen_cubic(grid$x, grid$y, frequency = 0.8)
+# Add sides for polygon
+grid$sides <- sample(3:10, size = nrow(grid), replace = T)
+# Add radius for polygons
+grid$r <- runif(nrow(grid))
+
+# Make plot
+grid %>%
+ggplot() +
+geom_regon(aes(x0 = x, y0 = y, sides = sides, angle = 1.9*pi, r = r, fill = noise), size = 0.1, color = NA, alpha = 0.1) +
+# Use your own colour scale with gradientn
+scale_fill_gradientn(colors = paletteer_d("lisa::JackYoungerman")) +
+coord_cartesian(clip = "off") +
+theme_void() +
+theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+```
+
