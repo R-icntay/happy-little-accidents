@@ -8,6 +8,6 @@
 *Some of these things are true and some of them lies. But they are all good stories*
 
 <p align = "center">
-    <img src = "R_palette\novus\novus_5_1.png" width = "60%">
-    <img src = R_palette\novus\novus_4_1.png width = "60%">
+    <img src = "R_palette\novus\novus_5_1.png" width = "70%">
+    <img src = R_palette\novus\novus_4_1.png width = "70%">
 </p>
