@@ -7,5 +7,6 @@
 
 *Some of these things are true and some of them lies. But they are all good stories*
 
-
-R palette\novus\novus_2.png
+<p align = "center">
+    <img src = "R palette\novus\novus_2.png">
+</p>
