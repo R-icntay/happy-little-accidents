@@ -1,0 +1,65 @@
+---
+title: "Genuary Day 2: Deu"
+output:
+  html_document:
+    df_print: paged
+    theme: flatly
+    highlight: breezedark
+    toc_float: yes
+    code_download: yes
+    word_document: null
+    toc: yes
+---
+
+
+```{r}
+suppressWarnings(if (!require(pacman)) install.packages("pacman"))
+
+pacman::p_load('tidyverse', 'ggforce', 'ambient', 'here', 'paletteer')
+
+# Not on cran
+library(MetBrewer)
+```
+
+
+
+```{r}
+set.seed(2056)
+n_x = 50
+n_y = 100
+
+grid <- tibble(
+  x = rep(1:n_x, times = n_y),
+  y = rep(1:100, each = n_x),
+  r = runif(nrow(grid), min = 0, max = 0.1),
+  noise = gen_cubic(x, y, frequency = 0.8)
+)
+
+
+grid %>% 
+  ggplot(mapping = aes(x = x, y = y)) +
+  geom_jitter(aes(size = r, color = noise), width = 2, height = 5, show.legend = F, alpha = 0.9) +
+  coord_polar(theta = "y", start = pi/10) +
+  scale_color_gradientn(colors =
+ # paletteer_d("lisa::JohnSingerSargent_1")
+#paletteer_d("nationalparkcolors::Badlands")
+  paletteer_d("nbapalettes::thunder")
+#paletteer_d("nbapalettes::knicks")
+#paletteer_d("ggsci::alternating_igv")
+                          ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "black", colour = NA)
+  )
+```
+
+
+
+
+
+```{r}
+library(here)
+
+ggsave("deu_13.png", device = "png",  width = 15, height = 15, dpi = 700)
+```
+

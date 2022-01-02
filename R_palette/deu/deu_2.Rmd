@@ -1,0 +1,59 @@
+---
+title: "Genuary Day 2: Deu"
+output:
+  html_document:
+    df_print: paged
+    theme: flatly
+    highlight: breezedark
+    toc_float: yes
+    code_download: yes
+    word_document: null
+    toc: yes
+---
+
+```{r}
+suppressWarnings(if (!require(pacman)) install.packages("pacman"))
+
+pacman::p_load('tidyverse', 'ggforce', 'ambient', 'here', 'paletteer')
+
+# Not on cran
+library(MetBrewer)
+```
+
+
+```{r}
+set.seed(2056)
+n_x = 50
+n_y = 100
+
+grid <- tibble(
+  x = rep(1:n_x, times = n_y),
+  y = rep(1:n_y, each = n_x),
+  r = runif(n_x*n_y, min = 10, max = 15),
+  noise = gen_cubic(x, y, frequency = 0.2)
+)
+
+
+grid %>% 
+  ggplot(mapping = aes(x = sin(x), y = cosh(y))) +
+  geom_jitter(aes(size = r, color = noise), width = 5, height = 15, show.legend = F, alpha = 0.4) +
+  coord_polar(theta = "x", start = pi/15) +
+  scale_color_gradientn(colors =
+ # paletteer_d("lisa::JohnSingerSargent_1")
+#paletteer_d("nationalparkcolors::Badlands")
+  paletteer_d("lisa::JackYoungerman")
+                          ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+```
+
+
+
+```{r}
+library(here)
+
+ggsave("deu_13.png", device = "png",  width = 15, height = 15, dpi = 700)
+```
+
