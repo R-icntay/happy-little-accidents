@@ -31,14 +31,14 @@ n_y = 100
 grid <- tibble(
   x = rep(1:n_x, times = n_y),
   y = rep(1:100, each = n_x),
-  r = runif(nrow(grid), min = 0, max = 0.1),
+  r = runif(length(x), min = 0, max = 0.1),
   noise = gen_cubic(x, y, frequency = 0.8)
 )
 
 
 grid %>% 
   ggplot(mapping = aes(x = x, y = y)) +
-  geom_jitter(aes(color = noise), width = 2, height = 5, show.legend = F, alpha = 1, size = 0.5) +
+  geom_jitter(aes(color = noise), width = 50, height = 55, show.legend = F, alpha = 1, size = 0.5) +
   coord_polar(theta = "y", start = pi/10) +
   scale_color_gradientn(colors =
   #paletteer_d("lisa::JackYoungerman")
