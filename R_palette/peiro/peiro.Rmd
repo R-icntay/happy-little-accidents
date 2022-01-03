@@ -1,0 +1,78 @@
+---
+title: "Genuary Day 3: peiro"
+output:
+  html_document:
+    df_print: paged
+    theme: flatly
+    highlight: breezedark
+    toc_float: yes
+    code_download: yes
+    word_document: null
+    toc: yes
+---
+
+
+```{r}
+suppressWarnings(if (!require(pacman)) install.packages("pacman"))
+
+pacman::p_load('tidyverse', 'ggforce', 'ambient', 'here', 'paletteer', 'ggshadow')
+
+# Not on cran
+library(MetBrewer)
+```
+
+Giving credit to [Georgios Karamanis code](https://github.com/gkaramanis/aRtist/tree/main/genuary/2022/), see what comes of it and learn in the process. Thank you Georgios 🙇, you are the real deal!
+
+```{r warning=F}
+set.seed(2056)
+
+pal <- MetBrewer::met.brewer("Hiroshige")
+n = 200
+grid_stars <- data.frame(
+  x = runif(n * 2),
+  y = runif(n * 2),
+  size2 = runif(n * 2, min = 0, max = 0.2),
+  x2 = runif(n/25),
+  y2 = runif(n/25),
+  size = runif(n, 0, 3),
+  color2 = pal[runif(n, min = 5, max = 10)]
+) 
+# grid_stars$noise_x = gen_cubic(grid_stars$x, grid_stars$y, frequency = 1.8)
+# 
+# grid_stars$noise_y = gen_cubic(grid_stars$x, grid_stars$y, frequency = 1.8)
+
+
+grid_stars %>% 
+  ggplot() +
+  geom_jitter(aes(x, y, size = size), color = "grey67") +
+  #coord_polar() +
+  geom_glowpoint(aes(x+0.05, y+0.05, size = size/100, color = color2, shadowsize = (size2/100) ^ 0.001), position = "jitter", alpha = 0.2) +
+  #geom_glowpoint(aes(median(grid_stars$x), median(grid_stars$y), size = size2, color = color2, shadowsize = size2 ^ 1.5)) +
+  scale_size_continuous(range = c(0.1, 2)) +
+  #coord_fixed(clip = "off") +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "grey10", color = NA)
+  )
+```
+
+
+
+```{r}
+# Didn't turn out the way I wanted
+
+# grid_stars <- grid_stars %>% 
+#   group_by(x, y, size, size2, color2) %>% 
+#   summarize(x2 = round(x, 2), y2 = round(y, 2)) 
+```
+
+
+Base R data.frame can allow features of different sizes.--> End up recycling the values after n.
+
+
+```{r}
+library(here)
+
+ggsave("de14.png", device = "png",  width = 20, height = 11.25, dpi = 700)
+```
