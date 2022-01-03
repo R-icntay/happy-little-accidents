@@ -22,3 +22,12 @@
     <img src = R_palette\deu\deu_14.png width = 63%>
 
 </p>
+
+*“Some infinities are bigger than other infinities”* The Fault in our stars
+
+<p align = "center">
+    <img src = R_palette\peiro\de5.png width = 63%>
+    <img src = R_palette\peiro\de13.png width = 63%>
+    <img src = R_palette\deu\deu_23.png width = 63%>
+
+</p>
