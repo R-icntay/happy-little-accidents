@@ -1,0 +1,109 @@
+---
+title: "Aster: Every story I create creates me. I write to create myself."
+output: html_notebook
+---
+
+
+
+```{r}
+suppressWarnings(if (!require(pacman)) install.packages("pacman"))
+
+pacman::p_load('tidyverse', 'ggforce', 'ambient', 'here', 'paletteer', 'ExtDist', 'gganimate')
+
+
+```
+
+
+```{r message=F, warning=F}
+set.seed(20563)
+theta <- seq(0, 18*pi, 0.1)
+
+# Make some values NA
+theta[sample(seq_len(length(theta)), size = round(0.2 * length(theta)), prob = 1 / ( (seq_len(length(theta)))^1.5 ) )] <- NA
+
+#
+r <- 0.5 + 0.5 * theta
+
+grid <- tibble(
+  x = r * cos(theta),
+  y = r * sin(theta),
+  col_val = runif(length(theta), -1, 1),
+  size_val = ExtDist::rBeta_ab(n = length(theta), shape1 = 3, shape2 = 9, a = 0, b = 40)
+)
+
+# bg noise
+bg_value <-  300
+grid_2 <- tibble(
+  x = runif(bg_value, -20, 20),
+  y = runif(bg_value, -20, 20)
+)
+
+
+aster = ggplot() +
+  geom_point(data = grid, mapping = aes(x = x, y = y, color = col_val), size = 0.5) +
+  
+  geom_point(data = grid_2, mapping = aes(x = x, y = y), colour = "white", size = runif(1, 0, 0.6)) +
+  
+  geom_point(data = grid_2, mapping = aes(x = -x, y = -y), size = 0.2, colour = "white") +
+  
+  geom_point(data = grid, mapping = aes(x = x + 0.5, y = y + 0.5), color = "white", size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = x * 0.009, y = y * 0.009), color = "white", size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = x * 0.5, y = y * 0.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = x + 1.5, y = y * 1.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = x + 2.5, y = y + 2.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = x * 2.5, y = y * 2.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = -x * 2.5, y = -y * 2.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = -x + 4.5, y = -y + 5.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = -x - 4.5, y = -y - 5.5, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_point(data = grid, mapping = aes(x = -x, y = y, color = col_val), size = runif(1, 0, 0.6), alpha = round(runif(1, 0.5, 0.8))) +
+  
+  geom_path(data = grid, mapping = aes(x = x*3, y = y*3), color = "white", linetype = "dotdash", size = 0.5) +
+  
+  scale_color_gradientn(colors = paletteer_d("lisa::PietMondrian")) +
+  
+  theme_void() +
+  coord_fixed(expand = FALSE) +
+  xlim(-20, 20) +
+  ylim(-20,20) +
+  scale_size(range = c(0, 12)) +
+  theme(
+    plot.background = element_rect(fill = "grey10", color = NA),
+    legend.position = "none"
+    
+  )
+
+# This transition allows you to let data gradually appear, based on a given time dimension
+gif <- aster +
+  transition_reveal(along = sin(size_val/col_val)) +
+# Easing functions specify the rate of change of a parameter over time.
+  ease_aes("bounce-in-out")
+  
+animate(gif, nframes = 500, width = 5, height = 5, units = "in", fps = 6, duration = 10, res = 200, renderer = gifski_renderer()) -> anim_fin
+
+anim_save(anim_fin, 
+          path = here(),
+          filename = "asterv.gif")
+
+
+# # Save png
+ggsave("asterv.png", plot = aster, device = "png",  width = 9, height = 9, dpi = 700, scaling = 1.2)
+
+```
+
+
+
+```{r}
+# # ggsave("novus_1.png", device = "png", width = 12, height = 12, units = "in", dpi = 500)
+# 
+# ggsave("aster.png", device = "png",  width = 9, height = 9, dpi = 700, scaling = 1.2)
+```
+
