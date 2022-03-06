@@ -36,7 +36,7 @@
 *“Every story I create creates me. I write to create myself.”* Octavia E. Butler
 
 <p align = "center">
-    <img src = R_palette\aster\aster3.png width = 63%>
-    <img src = R_palette\aster\asterv.png width = 63%>
-    <img src = R_palette\aster\asterv.gif width = 63%>
+    <img src = R_palette\aster\aster3.png width = 43%>
+    <img src = R_palette\aster\asterv.png width = 43%>
+    <img src = R_palette\aster\asterv.gif width = 43%>
 </p>
