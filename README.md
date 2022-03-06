@@ -29,7 +29,6 @@
 *“Some infinities are bigger than other infinities”* The Fault in our stars
 
 <p align = "center">
-    <img src = R_palette\peiro\de5.png width = 43%>
     <img src = R_palette\peiro\de13.png width = 43%>
     <img src = R_palette\deu\deu_23.png width = 43%>
 
