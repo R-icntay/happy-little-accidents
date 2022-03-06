@@ -14,14 +14,16 @@
     
 </p>
 
+<br>
 *“Why is a raven like a writing-desk?”* The Mad Hatter, Alice in Wonderland
 
 <p align = "center">
-    <img src = R_palette\deu\deu_8.png width = 43%>
     <img src = R_palette\deu\deu_16.png width = 43%>
     <img src = R_palette\deu\deu_14.png width = 43%>
 
 </p>
+
+<br>
 
 *“Some infinities are bigger than other infinities”* The Fault in our stars
 
@@ -32,6 +34,7 @@
 
 </p>
 
+<br>
 
 *“Every story I create creates me. I write to create myself.”* Octavia E. Butler
 
@@ -39,3 +42,5 @@
     <img src = R_palette\aster\aster3.png width = 43%>
     <img src = R_palette\aster\asterv.gif width = 43%>
 </p>
+
+<br>
