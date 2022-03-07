@@ -4,6 +4,8 @@ output: html_notebook
 ---
 
 
+This code modifies this [master piece](https://github.com/nrennie/aRt#spirals) by nrennie, adds some chaos and births something out of it!
+
 
 ```{r}
 suppressWarnings(if (!require(pacman)) install.packages("pacman"))
