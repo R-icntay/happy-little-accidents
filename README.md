@@ -62,7 +62,7 @@
 
 <p align = "center">
     <img src = R_palette\florence\flo_9.png width = 43%>
-    <img src = R_palette\florence\flo_10 width = 43%>
+    <img src = R_palette\florence\flo_10.png width = 43%>
 </p>
 
 <br>
