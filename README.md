@@ -32,7 +32,7 @@
 <br>
 
 <h2 align = "center">
-    Aster
+    Peiro
 </h2> 
 
 *“Some infinities are bigger than other infinities”* The Fault in our stars
@@ -44,6 +44,10 @@
 </p>
 
 <br>
+
+<h2 align = "center">
+    Aster
+</h2> 
 
 *“Every story I create creates me. I write to create myself.”* Octavia E. Butler
 
