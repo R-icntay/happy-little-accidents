@@ -16,6 +16,11 @@
 
 <br>
 
+<h2 align = "center">
+    Deu
+</h2> 
+
+
 *“Why is a raven like a writing-desk?”* The Mad Hatter, Alice in Wonderland
 
 <p align = "center">
@@ -25,6 +30,10 @@
 </p>
 
 <br>
+
+<h2 align = "center">
+    Aster
+</h2> 
 
 *“Some infinities are bigger than other infinities”* The Fault in our stars
 
@@ -41,6 +50,19 @@
 <p align = "center">
     <img src = R_palette\aster\aster3.png width = 43%>
     <img src = R_palette\aster\asterv.gif width = 43%>
+</p>
+
+<br>
+
+<h2 align = "center">
+    Florence
+</h2> 
+
+*“But some day you will be old enough to start reading fairy tales again.”*  C.S. Lewis, The Lion, the Witch and the Wardrobe
+
+<p align = "center">
+    <img src = R_palette\florence\flo_9.png width = 43%>
+    <img src = R_palette\florence\flo_10 width = 43%>
 </p>
 
 <br>
