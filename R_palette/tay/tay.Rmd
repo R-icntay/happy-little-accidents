@@ -1,0 +1,91 @@
+---
+title: "I wanna tell you not to get lost in these petty things"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook.
+When you execute code within the notebook, the results appear beneath the code.
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(taylor)
+library(tokenizers)
+library(magick)
+library(ambient)
+library(here)
+
+set.seed(1989)
+# Prepare desired lyrics :)
+lyrics <- taylor_all_songs %>% 
+  filter(track_name %in% c("Style", "Sparks Fly", "Enchanted", "Red (Taylor's Version)", "marjorie", "22 (Taylor's Version)", "Call It What You Want", "The Man", "Back To December", "New Romantics", "Everything Has Changed (Taylor's Version)", "Message In A Bottle (Taylor's Version) [From The Vault]", "All You Had To Do Was Stay")) %>% 
+  unnest(lyrics) %>%
+  pull(lyric) %>% 
+  str_to_lower() %>% 
+  str_remove_all("(oh, oh, oh-oh, oh)|(hey, hey, hey)|all you had to do was (stay, stay, stay, stay, stay)|all you had to do was (stay)|all you had to do was (stay)|oh, oh-oh|oh, oh-oh (yeah)|(ah, ah, ah, ah, ah, ah)|(red, red, red)|(red, red, red; red, red, red)|uh-uh, uh-uh|yeah|(ooh)|(call it what you want, call it what you want, call it)") %>% 
+  str_subset(".") %>% 
+  sample(replace = FALSE) %>% 
+  # Concatenate strings
+  str_c(collapse = " ") %>% 
+  # Tokenize characters
+  str_to_lower() %>% 
+  str_remove_all("[:punct:]") %>% 
+  str_trim() %>% 
+  #str_split(pattern = "[^A-z0-9_]") %>% unlist()
+  
+  tokenize_characters(strip_non_alphanum = F, simplify = TRUE) 
+
+
+
+# Read in image and convert to gray scale
+ts <- image_read("ts_1989.jpg") %>% 
+  image_convert(type = "grayscale")
+
+# Resize image
+ts <- ts %>% 
+  image_scale("150")
+
+# Create number rows and columns
+img_array <- drop(as.integer(pluck(ts, 1)))
+rownames(img_array) <- 1:nrow(img_array)
+colnames(img_array) <- 1:ncol(img_array)
+
+# Create data frame and rename columns
+img_df <- img_array %>% 
+  as_tibble() %>% 
+  mutate(y = 1:nrow(img_array)) %>% 
+  pivot_longer(!y, names_to = "x", values_to = "px") %>% 
+  mutate(across(everything(), as.numeric))
+
+
+# Create tibble with lyrics and px coordinates
+img_lyrics <- tibble(lyrics = lyrics) %>% 
+  slice_head(n = nrow(img_df)) %>% 
+  bind_cols(img_df) %>% 
+  mutate(px = scales::rescale(px)) %>% 
+  mutate(noise = gen_perlin(x, y, frequency = 0.008),
+         noise2 = gen_perlin(y, x, frequency = 0.003))
+```
+
+Make art-ish?
+
+```{r}
+img_lyrics %>% 
+  ggplot(mapping = aes(x = x, y = y)) +
+  #geom_point(aes(x = x, y = y, color = b)) +
+  geom_text(aes(label = lyrics,
+                size = noise * runif(1, 0.01, 0.8),
+                color = (px))) +
+  coord_equal() +
+  scale_y_reverse() +
+  scale_size_continuous(range = c(0, 3)) +
+  scale_colour_gradientn(colors = c(album_palettes$`1989`)) +
+  theme_void() +
+  theme(legend.position = "",
+        panel.background = element_rect(fill = "#32363FFF", color = NA, size = 0))
+```
+
+```{r}
+# Save image
+ggsave("tayloRswift_18.png", device = "png", width = 7, height = 7, units = "in", dpi = 700 )
+```
