@@ -70,3 +70,15 @@
 </p>
 
 <br>
+
+<h2 align = "center">
+    TS
+</h2> 
+
+*“I wanna tell you not to get lost in these petty things”* Taylor Swift, Long story short
+
+<p align = "center">
+    <img src = R_palette\tay\ts_1989.jpg width = 43%>
+    <img src = R_palette\tay\tayloRswift_19.png width = 43%>
+    <img src = R_palette\tay\tayloRswift_17.png width = 43%>
+</p>
