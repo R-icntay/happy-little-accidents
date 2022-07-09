@@ -1,0 +1,154 @@
+---
+title: "Call it what you want to"
+output: html_notebook
+---
+
+```{r}
+suppressWarnings(if (!require(pacman)) install.packages("pacman"))
+
+pacman::p_load('tidyverse', 'magick', 'ggforce', 'ambient', 'here', 'paletteer', 'ExtDist', 'gganimate', 'MetBrewer')
+```
+
+```{r}
+# Read in image and convert to gray scale
+ts <- image_read("ts_1989.jpg") %>% 
+  image_convert(type = "grayscale")
+
+# Resize image
+ts <- ts %>% 
+  image_scale("150")
+
+# Create number rows and columns
+img_array <- drop(as.integer(pluck(ts, 1)))
+rownames(img_array) <- 1:nrow(img_array)
+colnames(img_array) <- 1:ncol(img_array)
+
+# Create data frame and rename columns
+img_df <- img_array %>% 
+  as_tibble() %>% 
+  mutate(y = 1:nrow(img_array)) %>% 
+  pivot_longer(!y, names_to = "x", values_to = "px") %>% 
+  mutate(across(everything(), as.numeric))
+```
+
+Scatter plot using pixel locations:
+
+```{r}
+theme_set(theme_void())
+img_df %>% 
+  ggplot() +
+  geom_point(aes(x = x, y = y, color = px)) +
+  coord_equal() +
+  scale_y_reverse()
+```
+
+```{r}
+# Function for scraping song lyrics - this is a gray area 
+# Not sure about this :) 
+# Based on https://stat426-fall2021.github.io/blog/lyric-scraper blogpost
+# 
+get_lyrics <- function(artist, song){
+  # Make url
+  my_url = str_c("https://azlyrics.com/lyrics/", artist, "/", song, ".html")
+  
+  # 
+  giveaway = "prohibited by our licensing agreement. Sorry about that."
+  
+  lyrics = read_lines(my_url)
+  
+  # Where song lyrics starts
+  start = str_which(lyrics, giveaway) + 1
+  
+  # Where song lyrics end
+  end = str_which(lyrics[start:length(lyrics)], "</div>")[1] + start
+  
+  # Concatenate strings
+  lyrics = paste0(str_remove_all(lyrics[start:end], "<br>|</div>|&quot;|'"), sep = "") %>% 
+    tolower() %>% 
+    str_subset(".+")
+  
+  return(lyrics)
+  Sys.sleep(5)
+}
+
+lyrics = get_lyrics(artist = "taylorswift", song = "style")
+```
+
+Add lyrics randomly?
+
+Color randomly using Ts palettes?
+
+```{r}
+song_list <- c("style", "sparksfly", "enchanted", "22", "red", "marjorie", "callitwhatyouwant", "theman", "backtodecember", "newromantics")
+
+lyrics <- map(song_list, ~ get_lyrics(artist = "taylorswift", song = .x)) %>% 
+  unlist()
+
+#saveRDS(lyrics, "lyrics")
+```
+
+Make things interesting by sampling randomly:
+
+```{r}
+library(tokenizers)
+lyrics <- readRDS("lyrics")
+set.seed(1989)
+
+# Randomly sample lyrics
+img_lyrics <- sample(lyrics, size = length(lyrics)*4, replace = TRUE) %>% 
+  str_remove_all("ooh-ooh, ye-e-e-e-eah, hey|(red, red)|yeah|ooh-ooh") %>% 
+  str_subset(".") %>% 
+  # Concatenate strings
+  str_c(collapse = " ") %>% 
+  # Tokenize characters
+  str_to_lower() %>% 
+  str_remove_all("[:punct:]") %>% 
+  str_trim() %>% 
+  #str_split(pattern = "[^A-z0-9_]") %>% unlist()
+  
+  tokenize_characters(strip_non_alphanum = F, simplify = T) %>% 
+  tibble(lyrics = .) %>% 
+  slice_head(n = nrow(img_df)) %>% 
+  bind_cols(img_df) %>% 
+  mutate(px = scales::rescale(px)) %>% 
+  mutate(noise = gen_perlin(x, y, frequency = 0.008),
+         noise2 = gen_checkerboard(y, x, frequency = 0.015))
+```
+
+For each pixel position, put a character lyric.
+
+```{r}
+library(taylor)
+img_lyrics %>% 
+  #mutate(lyrics = str_pad(lyrics, 3, "right")) %>% 
+  ggplot(mapping = aes(x = x, y = y)) +
+  #geom_point(aes(x = x, y = y, color = b)) +
+  geom_text(aes(label = lyrics,
+                size = noise * runif(1, 0.01, 0.8),
+                color = (px))) +
+  coord_equal() +
+  scale_y_reverse() +
+  scale_size_continuous(range = c(0, 3)) +
+  scale_colour_gradientn(colors = c(album_palettes$`1989`)) +
+  #theme_void() +
+  theme(legend.position = "",
+        panel.background = element_rect(fill = "#32363FFF", color = NA, size = 0))
+```
+
+```{r}
+ggsave("tayloRswift_19.png", device = "png", width = 7, height = 7, units = "in", dpi = 700 )
+```
+
+```{r}
+tr %>% 
+  str_remove_all("ooh-ooh, ye-e-e-e-eah, hey|(red, red)|yeah|ooh-ooh") %>% 
+  str_subset(".") %>% 
+  # Concatenate strings
+  str_c(collapse = " ") %>% 
+  str_to_lower() %>% 
+  str_remove_all("[:punct:]") %>% 
+  str_trim() %>% 
+  #str_split(pattern = "[^A-z0-9_]") %>% unlist()
+  
+  tokenize_characters(strip_non_alphanum = F, simplify = T)
+```
