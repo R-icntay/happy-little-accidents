@@ -1,0 +1,49 @@
+---
+title: "If you can't teach me to sing, at least teach me to R"
+format: html
+editor: visual
+---
+
+```{r}
+library(ambient)
+library(tidyverse)
+library(paletteer)
+library(ggforce)
+
+# Create range of coordinates to choose from
+n = 300
+
+# Create canvas where we'll sample some coordinates
+canvas3 <- tibble(
+  # x = rep(seq_len(n), times = n),
+  # y = rep(seq_len(n), each = n),
+  x = sample(seq_len(n), replace = TRUE, size = n^2),
+  y = sample(seq_len(n), replace = TRUE, size = n^2),
+  n1 = gen_perlin(x, y, frequency = 0.5),
+  xend = (x) + runif(n = 1, min = -10, max = 10),
+  yend = (y) + runif(n = 1, min = -0.5, max = 2)
+)
+
+# Create artowrk hopefully
+theme_set(theme_void())
+artwork <- canvas3 %>% 
+  slice_sample(n = 1000) %>% 
+  ggplot() +
+  geom_diagonal(mapping = aes(x = sample(c(1, -1), 1)*y, y = sample(c(1, -1), 1)*x, xend = sample(c(1, -1), 1)*xend, yend = sample(c(1, -1), 1)*yend, color = sample(c(1, -1), 1)*n1), strength = runif(1, 0.1, 1)) +
+  scale_color_gradientn(colours = 
+      rev(c(paletteer::paletteer_d("ggthemes::excel_Paper"), paletteer::paletteer_d("ggthemes::excel_Paper"), "#FFFFFF", NA, paletteer::paletteer_d("nord::snowstorm")))
+      #paletteer::paletteer_d("colorblindr::OkabeIto")
+      ) +
+  theme(
+    legend.position = "none")
+
+# Display artwork
+artwork
+
+```
+
+```{r}
+# Save artwork
+fname = paste0(as.numeric(Sys.time()), ".png") #%>% str_split("\\.", 2) %>% unlist() %>% pluck(2)
+ggsave(fname, device = "png", width = 13, height = 8, units = "in", dpi = 700 )
+```
