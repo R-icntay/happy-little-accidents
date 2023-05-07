@@ -82,3 +82,17 @@
     <img src = R_palette\tay\tayloRswift_19.png width = 34%>
     <img src = R_palette\tay\tayloRswift_17.png width = 34%>
 </p>
+
+<br>
+
+<h2 align = "center">
+    Vol
+</h2> 
+
+*"I say, how do you fly?" asked John. “You just think lovely wonderful thoughts,” Peter explained, “and they lift you up in the air.”* J.M. Barrie, Peter Pan
+
+<p align = "center">
+    <img src = R_palette\mayday\1683418818.95761.png width = 29%>
+    <img src = R_palette\mayday\1683417226.75017.png width = 34%>
+    <img src = R_palette\mayday\26697.png width = 34%>
+</p>
