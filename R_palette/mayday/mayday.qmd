@@ -35,7 +35,8 @@ artwork <- canvas3 %>%
       #paletteer::paletteer_d("colorblindr::OkabeIto")
       ) +
   theme(
-    legend.position = "none")
+    legend.position = "none",
+     panel.background = element_rect(fill = "white", color = NA, linewidth = 0))
 
 # Display artwork
 artwork
